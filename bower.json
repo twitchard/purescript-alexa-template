@@ -1,0 +1,18 @@
+{
+  "name": "purescript-alexa-template",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "output"
+  ],
+  "dependencies": {
+    "purescript-prelude": "^3.1.1",
+    "purescript-console": "^3.0.0",
+    "purescript-simple-json": "^1.1.0",
+    "purescript-alexa": "^0.1.3"
+  },
+  "devDependencies": {
+    "purescript-psci-support": "^3.0.0"
+  }
+}

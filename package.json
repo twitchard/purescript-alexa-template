@@ -1,0 +1,19 @@
+{
+  "name": "purescript-alexa-template",
+  "version": "1.0.0",
+  "description": "Clone this project to get started building an Alexa skill in purescript",
+  "main": "output/index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "build": "pulp build",
+    "build-all": "./build-all.sh",
+    "run": "pulp run -- execute",
+    "manifest": "pulp run -- manifest > skill.json",
+    "model": "mkdir -p models && pulp run -- model > models/en-US.json",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "richard.marmorstein@gmail.com",
+  "license": "MIT"
+}
