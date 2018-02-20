@@ -8,11 +8,15 @@
   },
   "scripts": {
     "build": "pulp build",
-    "build-all": "./build-all.sh",
-    "run": "pulp run -- execute",
     "manifest": "pulp run -- manifest > skill.json",
     "model": "mkdir -p models && pulp run -- model > models/en-US.json",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build-all": "./build-all.sh",
+    "deploy": "ask deploy --target lambda",
+    "deploy-manifest": "ask deploy --target skill",
+    "deploy-model": "ask deploy --target model",
+    "deploy-all": "ask deploy",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "run": "pulp run -- execute"
   },
   "author": "richard.marmorstein@gmail.com",
   "license": "MIT"
