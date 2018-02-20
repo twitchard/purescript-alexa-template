@@ -13,7 +13,7 @@ model =
 
 americanEnglish :: LanguageModel
 americanEnglish =
-  { invocationName: "secret word"
+  { invocationName: "purescript template"
   , intents:
       [ { name: "AMAZON.CancelIntent" , samples: [] , slots : [] }
       , { name: "AMAZON.HelpIntent" , samples: [] , slots : [] }
