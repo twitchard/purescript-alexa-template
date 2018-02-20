@@ -1,5 +1,6 @@
 {
   "name": "purescript-alexa-template",
+  "private": true,
   "ignore": [
     "**/.*",
     "node_modules",
