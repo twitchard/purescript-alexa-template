@@ -27,7 +27,6 @@ manifest =
                     , "template"
                     ]
                 }
-          , isAvailableWorldWide : true
           , testingInstructions : ""
           , category : "GAMES"
           , distributionCountries : []
