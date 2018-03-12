@@ -20,12 +20,12 @@ instance wfStatus :: WriteForeign Status where
 instance rfStatus :: ReadForeign Status where
   readImpl f = read f >>= match
     where
-      match (status :: { name :: String, number :: Maybe Int } )
+      match (status :: { name :: String, n :: Maybe Int } )
         | status.name == "ConfirmingDecrement" =
             maybe
               ((fail <<< ForeignError) ("ConfirmingDecrement status without number."))
               (\x → pure $ ConfirmingDecrement x) 
-              status.number
+              status.n
         | status.name == "Counting" = pure Counting
         | otherwise = (fail <<< ForeignError) ("Unknown status: " <> status.name)
 
