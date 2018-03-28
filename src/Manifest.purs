@@ -37,6 +37,7 @@ manifest =
                   { "sourceDir" : NullOrUndefined $ Just "output"
                   , "uri" : NullOrUndefined $ Nothing
                   }
+              , "interfaces" : Nothing
               }
           }
       , manifestVersion : "1.0"
