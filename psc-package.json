@@ -1,0 +1,9 @@
+{
+  "name": "purescript-alexa-template",
+  "set": "master",
+  "source": "https://github.com/twitchard/package-sets",
+  "depends": [
+    "easy-alexa",
+    "prelude"
+  ]
+}

@@ -3,9 +3,8 @@ module Manifest where
 import Prelude
 
 import Amazon.Alexa.Manifest (Manifest)
-import Data.Foreign.NullOrUndefined (NullOrUndefined(..))
 import Data.Maybe (Maybe(..))
-import Data.StrMap (empty, singleton)
+import Foreign.Object (empty, singleton)
 
 manifest :: Manifest
 manifest =
@@ -34,8 +33,8 @@ manifest =
       , apis : 
           { "custom" :
               { "endpoint":
-                  { "sourceDir" : NullOrUndefined $ Just "output"
-                  , "uri" : NullOrUndefined $ Nothing
+                  { "sourceDir" : Just "output"
+                  , "uri" : Nothing
                   }
               , "interfaces" : Nothing
               }
@@ -50,7 +49,7 @@ manifest =
           , containsAds : false
           , locales : empty
           }
-      , events : NullOrUndefined Nothing
+      , events : Nothing
       , subscriptions : []
       , regions : empty
       }
