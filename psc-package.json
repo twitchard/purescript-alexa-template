@@ -3,6 +3,7 @@
   "set": "master",
   "source": "https://github.com/twitchard/package-sets",
   "depends": [
+    "test-unit",
     "easy-alexa",
     "prelude"
   ]

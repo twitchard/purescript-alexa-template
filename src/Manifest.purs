@@ -28,12 +28,12 @@ manifest =
                 }
           , testingInstructions : ""
           , category : "GAMES"
-          , distributionCountries : []
+          , distributionCountries : [ "US" ]
           }
       , apis : 
           { "custom" :
               { "endpoint":
-                  { "sourceDir" : Just "output"
+                 { "sourceDir" : Just "output"
                   , "uri" : Nothing
                   }
               , "interfaces" : Nothing
@@ -50,7 +50,7 @@ manifest =
           , locales : empty
           }
       , events : Nothing
-      , subscriptions : []
-      , regions : empty
+      , subscriptions : Nothing
+      , regions : Nothing
       }
   }
