@@ -8,19 +8,13 @@
           "apis": {
             "custom": {
               "endpoint": {
-                "uri": ""
-              },
-              "regions": {
-                "default": {
-                  "endpoint": {
-                    "uri": ""
-                  }
-                }
+                "uri": "purescript_template"
               }
             }
           }
         }
-      }
+      },
+      "in_skill_products": []
     }
   }
 }
