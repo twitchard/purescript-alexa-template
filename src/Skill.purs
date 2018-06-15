@@ -3,13 +3,12 @@ module Skill where
 import Prelude
 
 import Amazon.Alexa.Types (AlexaRequest(..), AlexaResponse, BuiltInIntent(..), Speech(..), readBuiltInIntent)
-import Control.Monad.Aff (Aff)
-import Control.Monad.Except (runExcept)
 import Data.Either (Either(..))
-import Data.Foreign (Foreign, ForeignError(..), fail)
 import Data.Int (fromString)
 import Data.Maybe (Maybe(..), isNothing, maybe)
-import Simple.JSON (class ReadForeign, class WriteForeign, read, write)
+import Effect.Aff (Aff)
+import Foreign (Foreign, ForeignError(..), fail)
+import Simple.JSON (class ReadForeign, class WriteForeign, read, read', write)
 
 type Session = Maybe { counter :: Int, status :: Status }
 data Status = Counting | ConfirmingDecrement Int
@@ -18,7 +17,7 @@ instance wfStatus :: WriteForeign Status where
   writeImpl Counting = write { name : "Counting" }
   writeImpl (ConfirmingDecrement n) = write { name : "ConfirmingDecrement", n : n }
 instance rfStatus :: ReadForeign Status where
-  readImpl f = read f >>= match
+  readImpl f = read' f >>= match
     where
       match (status :: { name :: String, n :: Maybe Int } )
         | status.name == "ConfirmingDecrement" =
@@ -62,15 +61,15 @@ readIntent intentName slots =
         | intentName == "IncrementIntent" = Increment number
         | intentName == "DecrementIntent" = Decrement number
         | otherwise = ErrorInput $ "Unrecognized intent: " <> intentName
-      number = case runExcept (read slots) of
+      number = case read slots of
         Right (r :: {"Num" :: { value :: String } }) → case fromString r."Num".value of
           Just n → n
           Nothing → 1
         Left _ → 1
 
-handle :: ∀ e. Foreign → Foreign → Aff e (AlexaResponse Session)
+handle :: Foreign → Foreign → Aff (AlexaResponse Session)
 handle event _ = do
-  output <- case runExcept (read event) of
+  output <- case read event of
     Left _ → runSkill (ErrorInput "Couldn't read event") Nothing
     Right (LaunchRequest r) → runSkill Start Nothing
     Right (SessionEndedRequest r) → runSkill End Nothing
@@ -87,11 +86,11 @@ handle event _ = do
     }
   where
     parsedIntent r = readIntent r.request.intent.name r.request.intent.slots
-    parsedSession attrs = case runExcept (read attrs) of
+    parsedSession attrs = case read attrs of
       Left _ → Nothing
       Right sess → sess
 
-runSkill :: ∀ e. Input → Session → Aff e (Output)
+runSkill :: Input → Session → Aff (Output)
 runSkill = run
   where
     run (ErrorInput s) _           = handleError s

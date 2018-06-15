@@ -1,18 +1,17 @@
 module Main
   ( main
   , handler
-  , STDIN
   ) where
 
 import Prelude
 
 import Amazon.Alexa.Handler (Handler, makeHandler)
-import Control.Monad.Aff (Aff, launchAff_)
-import Control.Monad.Aff.Compat (EffFnAff, fromEffFnAff)
-import Control.Monad.Eff (Eff, kind Effect)
-import Control.Monad.Eff.Class (liftEff)
-import Control.Monad.Eff.Console (CONSOLE, log)
-import Data.Foreign (Foreign)
+import Effect (Effect)
+import Effect.Aff (Aff, launchAff_)
+import Effect.Aff.Compat (EffectFnAff, fromEffectFnAff)
+import Effect.Class (liftEffect)
+import Effect.Console (log)
+import Foreign (Foreign)
 import Manifest (manifest)
 import Model (model)
 import Simple.JSON (write, writeJSON)
@@ -24,7 +23,7 @@ usage launch = "USAGE:\n" <>
   launch <> " model" <> " -- print the language model to stdout\n" <>
   launch <> " execute" <> " -- read an AlexaRequest from stdin and execute the skill handler, printing the json response to stdout\n"
 
-main :: forall e. Eff ( console :: CONSOLE, stdin :: STDIN | e) Unit
+main :: Effect Unit
 main = runCommand
   where
     runCommand
@@ -36,17 +35,17 @@ main = runCommand
     handleFromStdin  = launchAff_ do
       event <- readJsonFromStdin <#> write
       result <- map write $ handle event emptyObject
-      ( liftEff <<< logPretty <<< writeJSON) result
+      ( liftEffect <<< logPretty <<< writeJSON) result
 
     emptyObject :: Foreign
     emptyObject = write {}
 
-handler :: ∀ e. Handler e
+handler :: Handler
 handler = makeHandler \event context → do
   result <- handle event context
   pure $ write result
 
-foreign import logPretty :: ∀ e. String → Eff (console :: CONSOLE | e) Unit
+foreign import logPretty :: String → Effect Unit
 
 foreign import args ::
   { bin :: String
@@ -54,9 +53,8 @@ foreign import args ::
   , command :: String
   }
 
-foreign import data STDIN :: Effect
 
-foreign import _readJsonFromStdin :: ∀ eff. EffFnAff (stdin :: STDIN | eff) String
-readJsonFromStdin :: ∀ e. Aff (stdin :: STDIN | e) String
-readJsonFromStdin = fromEffFnAff _readJsonFromStdin
+foreign import _readJsonFromStdin :: EffectFnAff String
+readJsonFromStdin :: Aff String
+readJsonFromStdin = fromEffectFnAff _readJsonFromStdin
 
