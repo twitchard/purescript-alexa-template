@@ -4,11 +4,18 @@
       "skill_id": "",
       "was_cloned": false,
       "merge": {
-        "skillManifest": {
+        "manifest": {
           "apis": {
             "custom": {
               "endpoint": {
                 "uri": ""
+              },
+              "regions": {
+                "default": {
+                  "endpoint": {
+                    "uri": ""
+                  }
+                }
               }
             }
           }
