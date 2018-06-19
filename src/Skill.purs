@@ -54,7 +54,7 @@ getInputs event = do
   input <- parseInput ar # hush
   session <- case ar of
     IntentRequest r → (hush <<< read) r.session.attributes
-    _ → Nothing
+    _ → pure Nothing
   pure { input, session }
 
 type Output a = 
