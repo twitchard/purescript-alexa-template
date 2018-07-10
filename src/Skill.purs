@@ -7,10 +7,13 @@ import Amazon.Alexa.Types (AlexaRequest(..), AlexaResponse, Speech(..))
 import Data.Array.NonEmpty (appendArray)
 import Data.Either (Either, hush)
 import Data.Generic.Rep (class Generic)
+import Data.Generic.Rep.Show (genericShow)
 import Data.Map (insert)
 import Data.Maybe (Maybe(..), isNothing)
 import EasyAlexa (Builtin(..), languageModel, parseInput)
 import Effect.Aff (Aff)
+import Effect.Class (liftEffect)
+import Effect.Console (logShow)
 import Foreign (Foreign)
 import Foreign.Generic (defaultOptions, genericDecode, genericEncode)
 import Simple.JSON (class ReadForeign, class WriteForeign, read)
@@ -20,9 +23,10 @@ type Session = Maybe { status :: Status, counter :: Int }
 data Status = Counting | ConfirmingDecrement Int
 
 derive instance genericStatus :: Generic Status _
+instance showStatus :: Show Status where
+  show = genericShow
 instance readForeignStatus :: ReadForeign Status where
   readImpl = genericDecode defaultOptions
-
 instance writeForeignStatus :: WriteForeign Status where
   writeImpl = genericEncode defaultOptions
 
@@ -38,6 +42,8 @@ data Input
   | Launch
 
 derive instance genericInput :: Generic Input _
+instance showInput :: Show Input where
+  show = genericShow
 
 lm :: Either String LanguageModel
 lm = languageModel
@@ -91,7 +97,9 @@ handle event _ =
           , speech : "Something went wrong."
           , reprompt : Nothing
           }
-      Just {input, session} → runSkill input session
+      Just {input, session} → do
+         liftEffect $ logShow {input, session}
+         runSkill input session
 
 runSkill :: Input → Session → Aff (Output Session)
 runSkill = run
