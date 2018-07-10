@@ -3,6 +3,7 @@
   "set": "master",
   "source": "https://github.com/twitchard/package-sets",
   "depends": [
+    "foreign-generic",
     "easy-alexa",
     "debug",
     "test-unit",

@@ -4,7 +4,6 @@ import Prelude
 
 import Amazon.Alexa.LanguageModel (LanguageModel)
 import Amazon.Alexa.Types (AlexaRequest(..), AlexaResponse, Speech(..))
-import Control.Monad.Except (throwError)
 import Data.Array.NonEmpty (appendArray)
 import Data.Either (Either, hush)
 import Data.Generic.Rep (class Generic)
@@ -12,30 +11,20 @@ import Data.Map (insert)
 import Data.Maybe (Maybe(..), isNothing)
 import EasyAlexa (Builtin(..), languageModel, parseInput)
 import Effect.Aff (Aff)
-import Foreign (Foreign, ForeignError(..), F)
-import Simple.JSON (class ReadForeign, class WriteForeign, read, read', write)
+import Foreign (Foreign)
+import Foreign.Generic (defaultOptions, genericDecode, genericEncode)
+import Simple.JSON (class ReadForeign, class WriteForeign, read)
 import Type.Prelude (Proxy(..))
 
 type Session = Maybe { status :: Status, counter :: Int }
 data Status = Counting | ConfirmingDecrement Int
 
 derive instance genericStatus :: Generic Status _
-
 instance readForeignStatus :: ReadForeign Status where
-  readImpl f = read' f >>= parse
-    where
-      parse :: { name :: String, n :: Maybe Int } → F Status
-      parse { name, n }
-        | name == "Counting" = pure Counting
-        | name == "ConfirmingDecrement" =
-            case n of
-              Nothing → throwError (pure (ForeignError "Confirming decrement without a number"))
-              Just n' → pure $ ConfirmingDecrement n'
-        | otherwise = throwError (pure (ForeignError ("Unknown status: " <> name)))
+  readImpl = genericDecode defaultOptions
 
 instance writeForeignStatus :: WriteForeign Status where
-  writeImpl Counting                = write { name : "Counting", n : (Nothing :: Maybe Int)  }
-  writeImpl (ConfirmingDecrement n) = write { name : "ConfirmingDecrement", n : Just n }
+  writeImpl = genericEncode defaultOptions
 
 data Input
   = Cancel
