@@ -11,11 +11,12 @@ import Effect (Effect)
 import Effect.Aff (Aff, launchAff_)
 import Effect.Aff.Compat (EffectFnAff, fromEffectFnAff)
 import Effect.Class (liftEffect)
-import Effect.Console (log)
+import Effect.Console (error, log)
 import Foreign (Foreign)
 import Manifest (manifest)
 import Simple.JSON (write, writeJSON)
 import Skill (handle, lm)
+import Test.Unit.Main (exit)
 
 usage :: String → String
 usage launch = "USAGE:\n" <>
@@ -29,7 +30,9 @@ main = runCommand
     runCommand
       | args.command == "manifest" = logPretty $ writeJSON manifest
       | args.command == "model" = case lm of
-                                    Left err → log err
+                                    Left err → do
+                                       error err
+                                       exit 1
                                     Right m → logPretty $ writeJSON { interactionModel : { languageModel : m  } }
       | args.command == "execute" = handleFromStdin
       | otherwise = log $ usage (args.bin <> " " <> args.path)
