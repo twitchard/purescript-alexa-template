@@ -6,16 +6,17 @@ module Main
 import Prelude
 
 import Amazon.Alexa.Handler (Handler, makeHandler)
+import Data.Either (Either(..))
 import Effect (Effect)
 import Effect.Aff (Aff, launchAff_)
 import Effect.Aff.Compat (EffectFnAff, fromEffectFnAff)
 import Effect.Class (liftEffect)
-import Effect.Console (log)
+import Effect.Console (error, log)
 import Foreign (Foreign)
 import Manifest (manifest)
-import Model (model)
 import Simple.JSON (write, writeJSON)
-import Skill (handle)
+import Skill (handle, lm)
+import Test.Unit.Main (exit)
 
 usage :: String → String
 usage launch = "USAGE:\n" <>
@@ -28,7 +29,11 @@ main = runCommand
   where
     runCommand
       | args.command == "manifest" = logPretty $ writeJSON manifest
-      | args.command == "model" = logPretty $ writeJSON model
+      | args.command == "model" = case lm of
+                                    Left err → do
+                                       error err
+                                       exit 1
+                                    Right m → logPretty $ writeJSON { interactionModel : { languageModel : m  } }
       | args.command == "execute" = handleFromStdin
       | otherwise = log $ usage (args.bin <> " " <> args.path)
 
