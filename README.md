@@ -5,10 +5,10 @@ Clone this repo to get started building an Alexa skill for Purescript
 ## Prerequisites
 
 1. Node.js (and npm)
-2. Purescript, bower, and pulp.
+2. Purescript, psc-package, and pulp.
 
 ```sh
-npm install -g purescript bower pulp
+npm install -g purescript psc-package pulp
 ```
 
 3. The ask-cli Alexa Skills Kit command-line interface.
